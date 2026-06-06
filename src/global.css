@@ -1,0 +1,14 @@
+@font-face {
+  font-family: fira-code-regular;
+  src: url("../src/assets/fonts/FiraCode-Regular.ttf");
+}
+
+@import "tailwindcss";
+
+.scrollbar-hide {
+  scrollbar-width: none;
+}
+
+@theme {
+  --font-fira-code-regular: fira-code-regular, "sans-serif";
+}
