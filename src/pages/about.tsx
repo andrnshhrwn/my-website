@@ -244,30 +244,23 @@ const About = () => {
         </li>
       </ul>
 
-      <div className="p-4 max-md:p-2 flex-1 font-mono text-sm leading-relaxed overflow-y-auto">
+      <div className="p-4 max-md:p-2 flex-1 font-mono text-sm leading-relaxed overflow-y-auto scrollbar-hide">
         {currentContent ? (
-          /* Kotak kaca sekarang dikunci mengikuti lebar layar (tanpa min-w-max) */
           <div className="border border-slate-800 rounded-lg p-4 max-md:p-2 bg-slate-900/10 backdrop-blur-sm text-left w-full">
-            {/* Teks Komentar Kepala (Tetap di tempat, tidak ikut tergulir) */}
             <p className="text-slate-500">{currentContent.title}</p>
             <p className="text-slate-500">{currentContent.comment}</p>
             <p className="text-slate-500 mb-2"> */</p>
 
-            {/* FIX: Kontainer isolasi khusus untuk baris kode agar hanya area ini yang bisa di-scroll horizontal */}
-            <div className="overflow-x-auto w-full flex flex-col custom-scrollbar">
-              {/* Loop Baris Kode */}
+            <div className="overflow-x-auto scrollbar-hide w-full flex flex-col custom-scrollbar">
               {currentContent.code.map((line, index) => (
-                /* min-w-max dipindah ke sini agar background baris saat di-scroll tidak terpotong */
                 <div
                   key={index}
                   className="flex gap-3 items-start text-left whitespace-nowrap min-w-max py-[2px]"
                 >
-                  {/* Kolom Kiri: Nomor Baris */}
                   <span className="text-slate-600 select-none w-6 text-right shrink-0 pr-1">
                     {index + 1}
                   </span>
 
-                  {/* Kolom Kanan: Teks Kode */}
                   <p className="text-slate-300">
                     {line.startsWith("const") ? (
                       <>
