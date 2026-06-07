@@ -80,7 +80,7 @@ const About = () => {
   const currentContent = selectedFolder ? folderData[selectedFolder] : null;
 
   return (
-    <div className="text-slate-200 w-full flex flex-col h-full">
+    <div className="text-slate-200 w-full flex flex-col h-full overflow-y-auto scrollbar-hide">
       <ul className="flex flex-col gap-[1px] border-b border-slate-700">
         <li className="p-4 text-slate-400 select-none">
           <h1 className="text-xl font-semibold text-slate-100 font-mono">
