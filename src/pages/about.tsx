@@ -66,11 +66,37 @@ const folderData: Record<string, FolderContent> = {
   },
 };
 
+const menuStructure = [
+  {
+    id: "personal",
+    label: "personal info",
+    items: [
+      { id: "bio", label: "bio", color: "text-teal-400" },
+      { id: "education", label: "education", color: "text-indigo-400" },
+    ],
+  },
+  {
+    id: "professional",
+    label: "professional info",
+    items: [
+      { id: "skills", label: "skills", color: "text-sky-400" },
+      { id: "experience", label: "experience", color: "text-purple-400" },
+    ],
+  },
+  {
+    id: "hobbies",
+    label: "hobbies",
+    items: [
+      { id: "gaming", label: "gaming", color: "text-yellow-400" },
+      { id: "investing", label: "investing", color: "text-orange-400" },
+    ],
+  },
+];
+
 const About = () => {
   const [activeAccordion, setActiveAccordion] = useState<string | null>(
     "personal",
   );
-
   const [selectedFolder, setSelectedFolder] = useState<string | null>("bio");
 
   const toggleAccordion = (menuName: string) => {
@@ -79,207 +105,164 @@ const About = () => {
 
   const currentContent = selectedFolder ? folderData[selectedFolder] : null;
 
+  const renderCodeLine = (line: string) => {
+    const constRegex = /^(\s*)(const\s+)(.*)$/;
+    const match = line.match(constRegex);
+
+    if (match) {
+      const [_, spaces, constKeyword, restOfLine] = match;
+      return (
+        <>
+          <span className="whitespace-pre">{spaces}</span>
+          <span className="text-purple-400">{constKeyword}</span>
+          {restOfLine}
+        </>
+      );
+    }
+    return <span className="whitespace-pre">{line}</span>;
+  };
+
   return (
-    <div className="text-slate-200 w-full flex flex-col h-full scrollbar-hide">
-      <ul className="flex flex-col gap-[1px] border-b border-slate-700">
-        <li className="p-4 text-slate-400 select-none">
-          <h1 className="text-xl font-semibold text-slate-100 font-mono">
-            _about-me
-          </h1>
-          <p className="text-xs text-slate-500 mt-1">
-            // Rincian tentang siapa dan apa yang bisa saya lakukan
-          </p>
-        </li>
+    // PERBAIKAN: Menggunakan h-full & overflow-hidden agar ukuran dikunci oleh MainLayout
+    <div className="text-slate-200 w-full flex flex-col h-full will-change-transform">
+      {/* Header Title */}
+      <div className="p-4 text-slate-400 select-none shrink-0 border-b border-slate-800">
+        <h1 className="text-xl font-semibold text-slate-100 font-mono">
+          _about-me
+        </h1>
+        <p className="text-xs text-slate-500 mt-1">// Rincian tentang saya</p>
+      </div>
 
-        <li>
-          <button
-            onClick={() => toggleAccordion("personal")}
-            className="w-full p-4 bg-slate-700/20 hover:bg-slate-700/40 border-y border-slate-800 flex items-center gap-2 cursor-pointer transition-colors duration-200 text-left"
-          >
-            <span
-              className={`transition-transform duration-200 ${activeAccordion === "personal" ? "rotate-90" : ""}`}
-            >
-              <BiSolidChevronsRight className="text-slate-400" />
-            </span>
-            <span
-              className={
-                activeAccordion === "personal" ? "text-yellow-400" : ""
-              }
-            >
-              personal info
-            </span>
-          </button>
-
-          <div
-            className={`transition-all duration-300 overflow-hidden bg-slate-900/20 ${activeAccordion === "personal" ? "max-h-40 opacity-100" : "max-h-0 opacity-0 pointer-events-none"}`}
-          >
-            <ul className="p-4 pl-8 flex flex-col gap-2 text-sm text-slate-400">
-              <li
-                onClick={() => setSelectedFolder("bio")}
-                className={`flex items-center gap-2 cursor-pointer ${selectedFolder === "bio" ? "text-slate-100 font-medium" : "hover:text-slate-200"}`}
+      {/* Kontainer Utama Penggulung Menu & Konten (Hanya area di dalam ini yang boleh scroll jika menyempit) */}
+      <div className="flex-1 flex flex-col min-h-0 overflow-y-auto">
+        {/* Menu List dengan mapping dinamis */}
+        <div className="flex flex-col gap-[1px] shrink-0">
+          {menuStructure.map((menu) => (
+            <div key={menu.id} className="border-b border-slate-900/60">
+              <button
+                onClick={() => toggleAccordion(menu.id)}
+                className="w-full p-4 bg-slate-800/5 hover:bg-slate-700/10 flex items-center gap-2 cursor-pointer transition-colors duration-200 text-left"
               >
-                <RiFolder3Fill className="text-teal-400" /> bio
-              </li>
-              <li
-                onClick={() => setSelectedFolder("education")}
-                className={`flex items-center gap-2 cursor-pointer ${selectedFolder === "education" ? "text-slate-100 font-medium" : "hover:text-slate-200"}`}
-              >
-                <RiFolder3Fill className="text-indigo-400" /> education
-              </li>
-            </ul>
-          </div>
-        </li>
-
-        <li>
-          <button
-            onClick={() => toggleAccordion("professional")}
-            className="w-full p-4 bg-slate-700/20 hover:bg-slate-700/40 border-b border-slate-800 flex items-center gap-2 cursor-pointer transition-colors duration-200 text-left"
-          >
-            <span
-              className={`transition-transform duration-200 ${activeAccordion === "professional" ? "rotate-90" : ""}`}
-            >
-              <BiSolidChevronsRight className="text-slate-400" />
-            </span>
-            <span
-              className={
-                activeAccordion === "professional" ? "text-yellow-400" : ""
-              }
-            >
-              professional info
-            </span>
-          </button>
-
-          <div
-            className={`transition-all duration-300 overflow-hidden bg-slate-900/20 ${activeAccordion === "professional" ? "max-h-40 opacity-100" : "max-h-0 opacity-0 pointer-events-none"}`}
-          >
-            <ul className="p-4 pl-8 flex flex-col gap-2 text-sm text-slate-400">
-              <li
-                onClick={() => setSelectedFolder("skills")}
-                className={`flex items-center gap-2 cursor-pointer ${selectedFolder === "skills" ? "text-slate-100 font-medium" : "hover:text-slate-200"}`}
-              >
-                <RiFolder3Fill className="text-sky-400" /> skills
-              </li>
-              <li
-                onClick={() => setSelectedFolder("experience")}
-                className={`flex items-center gap-2 cursor-pointer ${selectedFolder === "experience" ? "text-slate-100 font-medium" : "hover:text-slate-200"}`}
-              >
-                <RiFolder3Fill className="text-purple-400" /> experience
-              </li>
-            </ul>
-          </div>
-        </li>
-
-        <li>
-          <button
-            onClick={() => toggleAccordion("hobbies")}
-            className="w-full p-4 bg-slate-700/20 hover:bg-slate-700/40 border-b border-slate-800 flex items-center gap-2 cursor-pointer transition-colors duration-200 text-left"
-          >
-            <span
-              className={`transition-transform duration-200 ${activeAccordion === "hobbies" ? "rotate-90" : ""}`}
-            >
-              <BiSolidChevronsRight className="text-slate-400" />
-            </span>
-            <span
-              className={activeAccordion === "hobbies" ? "text-yellow-400" : ""}
-            >
-              hobbies
-            </span>
-          </button>
-
-          <div
-            className={`transition-all duration-300 overflow-hidden bg-slate-900/20 ${activeAccordion === "hobbies" ? "max-h-40 opacity-100" : "max-h-0 opacity-0 pointer-events-none"}`}
-          >
-            <ul className="p-4 pl-8 flex flex-col gap-2 text-sm text-slate-400">
-              <li
-                onClick={() => setSelectedFolder("gaming")}
-                className={`flex items-center gap-2 cursor-pointer ${selectedFolder === "gaming" ? "text-slate-100 font-medium" : "hover:text-slate-200"}`}
-              >
-                <RiFolder3Fill className="text-yellow-400" /> gaming
-              </li>
-              <li
-                onClick={() => setSelectedFolder("investing")}
-                className={`flex items-center gap-2 cursor-pointer ${selectedFolder === "investing" ? "text-slate-100 font-medium" : "hover:text-slate-200"}`}
-              >
-                <RiFolder3Fill className="text-orange-400" /> investing
-              </li>
-            </ul>
-          </div>
-        </li>
-
-        <li>
-          <button
-            onClick={() => toggleAccordion("contact")}
-            className="w-full p-4 bg-slate-700/20 hover:bg-slate-700/40 border-b border-slate-800 flex items-center gap-2 cursor-pointer transition-colors duration-200 text-left"
-          >
-            <span
-              className={`transition-transform duration-200 ${activeAccordion === "contact" ? "rotate-90" : ""}`}
-            >
-              <BiSolidChevronsRight className="text-slate-400" />
-            </span>
-            <span
-              className={activeAccordion === "contact" ? "text-yellow-400" : ""}
-            >
-              contact
-            </span>
-          </button>
-
-          <div
-            className={`transition-all duration-300 overflow-hidden bg-slate-900/20 ${activeAccordion === "contact" ? "max-h-40 opacity-100" : "max-h-0 opacity-0 pointer-events-none"}`}
-          >
-            <ul className="p-4 pl-8 flex flex-col gap-2 text-sm text-slate-400">
-              <li
-                onClick={() => setSelectedFolder(null)}
-                className="flex items-center gap-2 hover:text-slate-200 cursor-pointer"
-              >
-                <RiPhoneFill className="text-emerald-400" /> phone
-              </li>
-              <li
-                onClick={() => setSelectedFolder(null)}
-                className="flex items-center gap-2 hover:text-slate-200 cursor-pointer"
-              >
-                <RiMailFill className="text-rose-400" /> email
-              </li>
-            </ul>
-          </div>
-        </li>
-      </ul>
-
-      <div className="p-4 max-md:p-2 flex-1 font-mono text-sm leading-relaxed overflow-y-auto scrollbar-hide">
-        {currentContent ? (
-          <div className="border border-slate-800 rounded-lg p-4 max-md:p-2 bg-slate-900/10 backdrop-blur-sm text-left w-full">
-            <p className="text-slate-500">{currentContent.title}</p>
-            <p className="text-slate-500">{currentContent.comment}</p>
-            <p className="text-slate-500 mb-2"> */</p>
-
-            <div className="overflow-x-auto scrollbar-hide w-full flex flex-col custom-scrollbar">
-              {currentContent.code.map((line, index) => (
-                <div
-                  key={index}
-                  className="flex gap-3 items-start text-left whitespace-nowrap min-w-max py-[2px]"
+                <span
+                  className={`transition-transform duration-200 ${activeAccordion === menu.id ? "rotate-90" : ""}`}
                 >
-                  <span className="text-slate-600 select-none w-6 text-right shrink-0 pr-1">
-                    {index + 1}
-                  </span>
+                  <BiSolidChevronsRight className="text-slate-400" />
+                </span>
+                <span
+                  className={
+                    activeAccordion === menu.id
+                      ? "text-yellow-400 font-medium"
+                      : ""
+                  }
+                >
+                  {menu.label}
+                </span>
+              </button>
 
-                  <p className="text-slate-300">
-                    {line.startsWith("const") ? (
-                      <>
-                        <span className="text-purple-400">const</span>{" "}
-                        {line.substring(5)}
-                      </>
-                    ) : (
-                      line
-                    )}
-                  </p>
-                </div>
-              ))}
+              <div
+                className={`transition-all duration-300 overflow-hidden bg-slate-900/10 ${
+                  activeAccordion === menu.id
+                    ? "max-h-40 opacity-100"
+                    : "max-h-0 opacity-0 pointer-events-none"
+                }`}
+              >
+                <ul className="p-4 pl-8 flex flex-col gap-2 text-sm text-slate-400">
+                  {menu.items.map((item) => (
+                    <li
+                      key={item.id}
+                      onClick={() => setSelectedFolder(item.id)}
+                      className={`flex items-center gap-2 cursor-pointer transition-colors duration-150 ${
+                        selectedFolder === item.id
+                          ? "text-slate-100 font-semibold"
+                          : "hover:text-slate-200"
+                      }`}
+                    >
+                      <RiFolder3Fill className={item.color} /> {item.label}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))}
+
+          {/* Menu Contact */}
+          <div className="border-b border-slate-900/60">
+            <button
+              onClick={() => toggleAccordion("contact")}
+              className="w-full p-4 bg-slate-800/5 hover:bg-slate-700/10 flex items-center gap-2 cursor-pointer transition-colors duration-200 text-left"
+            >
+              <span
+                className={`transition-transform duration-200 ${activeAccordion === "contact" ? "rotate-90" : ""}`}
+              >
+                <BiSolidChevronsRight className="text-slate-400" />
+              </span>
+              <span
+                className={
+                  activeAccordion === "contact"
+                    ? "text-yellow-400 font-medium"
+                    : ""
+                }
+              >
+                contact
+              </span>
+            </button>
+
+            <div
+              className={`transition-all duration-300 overflow-hidden bg-slate-900/10 ${
+                activeAccordion === "contact"
+                  ? "max-h-40 opacity-100"
+                  : "max-h-0 opacity-0 pointer-events-none"
+              }`}
+            >
+              <ul className="p-4 pl-8 flex flex-col gap-2 text-sm text-slate-400">
+                <li
+                  onClick={() => setSelectedFolder(null)}
+                  className="flex items-center gap-2 hover:text-slate-200 cursor-pointer"
+                >
+                  <RiPhoneFill className="text-emerald-400" /> phone
+                </li>
+                <li
+                  onClick={() => setSelectedFolder(null)}
+                  className="flex items-center gap-2 hover:text-slate-200 cursor-pointer"
+                >
+                  <RiMailFill className="text-rose-400" /> email
+                </li>
+              </ul>
             </div>
           </div>
-        ) : (
-          <div className="h-40 flex items-center justify-center text-slate-500 text-xs italic border border-dashed border-slate-800 rounded-lg">
-            // Select a folder to view details...
-          </div>
-        )}
+        </div>
+
+        <div className="p-4 max-md:p-2 flex-1 min-h-[180px] font-mono text-sm leading-relaxed overflow-y-visible">
+          {currentContent ? (
+            <div className="border border-slate-900 rounded-lg p-4 max-md:p-2 bg-slate-900/20 backdrop-blur-sm text-left w-full h-auto">
+              <p className="text-slate-500 select-none">
+                {currentContent.title}
+              </p>
+              <p className="text-slate-500 select-none">
+                {currentContent.comment}
+              </p>
+              <p className="text-slate-500 select-none mb-2"> */</p>
+
+              <div className="overflow-x-auto w-full flex flex-col">
+                {currentContent.code.map((line, index) => (
+                  <div
+                    key={index}
+                    className="flex gap-3 items-start text-left whitespace-nowrap min-w-max py-[2px]"
+                  >
+                    <span className="text-slate-600 select-none w-6 text-right shrink-0 pr-1">
+                      {index + 1}
+                    </span>
+                    <p className="text-slate-300">{renderCodeLine(line)}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="h-32 flex items-center justify-center text-slate-500 text-xs italic border border-dashed border-slate-900 rounded-lg bg-slate-950/10">
+              // Select a folder to view details...
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
